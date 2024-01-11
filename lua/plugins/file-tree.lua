@@ -8,7 +8,7 @@ return {
 		end,
 		config = true,
 		keys = {
-			{ '<C-t>', vim.cmd.NvimTreeOpen }
+			{ '<C-t>', vim.cmd.NvimTreeToggle }
 		}
 	},
 	{
