@@ -1,8 +1,6 @@
--- https://github.com/nvim-treesitter/nvim-treesitter
+
 return {
-    -- Treesitter is a new parser generator tool that we can
-    -- use in Neovim to power faster and more accurate
-    -- syntax highlighting.
+    -- https://github.com/nvim-treesitter/nvim-treesitter
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -44,5 +42,18 @@ return {
                 additional_vim_regex_highlighting = false,
             },
         }
+    },
+    -- https://github.com/windwp/nvim-autopairs
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+    },
+    -- https://github.com/kylechui/nvim-surround
+    {
+        "kylechui/nvim-surround",
+        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        event = "VeryLazy",
+        config = true
     }
 }
