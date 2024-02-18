@@ -1,6 +1,6 @@
 -- https://github.com/rose-pine/neovim
 
-local default = "dawn" -- auto, main, moon, dawn
+local default = "auto" -- auto, main, moon, dawn
 
 local function colorscheme(rose_pine, variant)
     rose_pine.colorscheme(variant)
