@@ -16,19 +16,25 @@ return {
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
+        lazy = true,
+        config = false,
+        init = function()
+            -- Disable automatic setup, we are doing it manually
+            vim.g.lsp_zero_extend_cmp = 0
+            vim.g.lsp_zero_extend_lspconfig = 0
+        end,
     },
     {
         'williamboman/mason.nvim',
         lazy = false,
         config = true,
     },
-
     -- Autocompletion
     {
         'hrsh7th/nvim-cmp',
         event = 'InsertEnter',
         dependencies = {
-            {'L3MON4D3/LuaSnip'},
+            { 'L3MON4D3/LuaSnip' },
         },
         config = function()
             -- Here is where you configure the autocompletion settings.
@@ -37,7 +43,7 @@ return {
 
             -- And you can configure cmp even more, if you want to.
             local cmp = require('cmp')
-            local select = {behavior = cmp.SelectBehavior.Select}
+            local select = { behavior = cmp.SelectBehavior.Select }
 
             cmp.setup({
                 formatting = lsp_zero.cmp_format(),
@@ -45,10 +51,10 @@ return {
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-j>'] = cmp.mapping.select_next_item(select),
                     ['<C-k>'] = cmp.mapping.select_prev_item(select),
-                    ['<Enter>'] = cmp.mapping.confirm({select = true})
-                })
+                    ['<Enter>'] = cmp.mapping.confirm({ select = true }),
+                }),
             })
-        end
+        end,
     },
 
     -- LSP
@@ -57,13 +63,26 @@ return {
         cmd = {'LspInfo', 'LspInstall', 'LspStart'},
         event = {'BufReadPre', 'BufNewFile'},
         dependencies = {
-            {'hrsh7th/cmp-nvim-lsp'},
-            {'williamboman/mason-lspconfig.nvim'},
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'williamboman/mason-lspconfig.nvim' },
         },
         config = function()
             -- This is where all the LSP shenanigans will live
             local lsp_zero = require('lsp-zero')
             lsp_zero.extend_lspconfig()
+
+            -- format on save
+            -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/abac76482ec3012a2b359ba956a74e2ffd33d46f/doc/md/lsp.md#enable-format-on-save
+            lsp_zero.format_on_save({
+                format_opts = {
+                    async = false,
+                    timeout_ms = 10000,
+                },
+                servers = {
+                    ['gopls'] = {'go'},
+                    ['tsserver'] = {'javascript', 'typescript'},
+                }
+            })
 
             --- if you want to know more about lsp-zero and mason.nvim
             --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
