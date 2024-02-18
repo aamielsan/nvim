@@ -1,14 +1,33 @@
+local arr = require("lua.array")
+local lang = require("lua.language-server")
+
 -- Reference: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local lsp_servers = {
-    'dockerls',
-    'gopls',
-    'gradle_ls',
-    'html',
-    'tsserver',
-    'kotlin_language_server',
-    'lua_ls',
-    'jedi_language_server',
-    'tailwindcss',
+    lang.server('dockerls'),
+    lang.server('gopls', {
+        -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#configuration
+        settings = {
+            gopls = {
+                usePlaceholders = true,
+            },
+        },
+    }),
+    lang.server('gradle_ls'),
+    lang.server('html'),
+    lang.server('tsserver'),
+    lang.server('kotlin_language_server'),
+    lang.server('lua_ls', {
+        -- https://luals.github.io/wiki/configuration/#neovim
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' },
+                },
+            },
+        },
+    }),
+    lang.server('jedi_language_server'),
+    lang.server('tailwindcss'),
 }
 
 return {
@@ -86,26 +105,26 @@ return {
 
             --- if you want to know more about lsp-zero and mason.nvim
             --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
-            lsp_zero.on_attach(function(client, bufnr)
+            lsp_zero.on_attach(function(_, bufnr)
                 -- see :help lsp-zero-keybindings
                 -- to learn the available actions
                 lsp_zero.default_keymaps({ buffer = bufnr })
             end)
 
+            local function ensure_installed_from(servers)
+                return arr.map(servers, function(s) return s.name end)
+            end
+
+            local function handlers_from(servers, init)
+                return arr.reduce(servers, function (acc, s)
+                    acc[s.name] = require('lspconfig')[s.name].setup(s.setup)
+                    return acc
+                end, init)
+            end
+
             require('mason-lspconfig').setup({
-                ensure_installed = lsp_servers,
-                handlers = {
-                    lsp_zero.default_setup,
-                    gopls = function()
-                        require('lspconfig').gopls.setup({
-                            settings = {
-                                gopls = {
-                                    usePlaceholders = true
-                                }
-                            }
-                        })
-                    end
-                }
+                ensure_installed = ensure_installed_from(lsp_servers),
+                handlers = handlers_from(lsp_servers, { lsp_zero.default_setup }),
             })
         end
     }
