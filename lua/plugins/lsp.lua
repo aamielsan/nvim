@@ -1,3 +1,16 @@
+-- Reference: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
+local lsp_servers = {
+	'dockerls',
+	'gopls',
+	'gradle_ls',
+	'html',
+	'tsserver',
+	'kotlin_language_server',
+	'lua_ls',
+	'jedi_language_server',
+	'tailwindcss',
+}
+
 return {
 	-- Reference: https://lsp-zero.netlify.app/v3.x/guide/lazy-loading-with-lazy-nvim.html
 	{
@@ -69,7 +82,7 @@ return {
 			end)
 
 			require('mason-lspconfig').setup({
-				ensure_installed = {},
+				ensure_installed = lsp_servers,
 				handlers = {
 					lsp_zero.default_setup,
 					lua_ls = function()
