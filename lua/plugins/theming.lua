@@ -81,22 +81,7 @@ return {
                     h6 = "foam",
                 },
 
-                highlight_groups = {
-                    -- borderless telescope
-                    -- https://github.com/rose-pine/neovim/wiki/Recipes#borderless-telescopenvim
-                    TelescopeBorder = { fg = "overlay", bg = "overlay" },
-                    TelescopeNormal = { fg = "subtle", bg = "overlay" },
-                    TelescopeSelection = { fg = "text", bg = "highlight_med" },
-                    TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
-                    TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
-
-                    TelescopeTitle = { fg = "base", bg = "love" },
-                    TelescopePromptTitle = { fg = "base", bg = "pine" },
-                    TelescopePreviewTitle = { fg = "base", bg = "iris" },
-
-                    TelescopePromptNormal = { fg = "text", bg = "surface" },
-                    TelescopePromptBorder = { fg = "surface", bg = "surface" },
-                },
+                highlight_groups = {},
 
                 before_highlight = function(group, highlight, palette)
                     -- Disable all undercurls
