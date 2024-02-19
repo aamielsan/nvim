@@ -8,6 +8,25 @@ end
 
 return {
     {
+        "nvim-lualine/lualine.nvim",
+        event = 'BufReadPre',
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "rose-pine",
+                    sections = {
+                        lualine_a = {"mode"},
+                        lualine_b = {"branch", "diff", "diagnostics"},
+                        lualine_c = {"filename"},
+                        lualine_x = {"encoding", "fileformat", "filetype"},
+                        lualine_y = {"progress"},
+                        lualine_z = {"location"}
+                    },
+                }
+            })
+        end
+    },
+    {
         "rose-pine/neovim",
         name = "rose-pine",
         config = function()
@@ -63,8 +82,20 @@ return {
                 },
 
                 highlight_groups = {
-                    -- Comment = { fg = "foam" },
-                    -- VertSplit = { fg = "muted", bg = "muted" },
+                    -- borderless telescope
+                    -- https://github.com/rose-pine/neovim/wiki/Recipes#borderless-telescopenvim
+                    TelescopeBorder = { fg = "overlay", bg = "overlay" },
+                    TelescopeNormal = { fg = "subtle", bg = "overlay" },
+                    TelescopeSelection = { fg = "text", bg = "highlight_med" },
+                    TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
+                    TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
+
+                    TelescopeTitle = { fg = "base", bg = "love" },
+                    TelescopePromptTitle = { fg = "base", bg = "pine" },
+                    TelescopePreviewTitle = { fg = "base", bg = "iris" },
+
+                    TelescopePromptNormal = { fg = "text", bg = "surface" },
+                    TelescopePromptBorder = { fg = "surface", bg = "surface" },
                 },
 
                 before_highlight = function(group, highlight, palette)
