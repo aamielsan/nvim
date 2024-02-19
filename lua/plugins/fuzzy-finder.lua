@@ -7,8 +7,8 @@ return {
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = true,
         keys = {
-            { '<leader>f', function() require('telescope.builtin').live_grep({}) end },
-            { '<C-p>', function() require('telescope.builtin').find_files() end },
+            { '<Leader>f', function() require('telescope.builtin').live_grep({}) end },
+            { '<Leader>p', function() require('telescope.builtin').find_files() end },
         }
     }
 }
