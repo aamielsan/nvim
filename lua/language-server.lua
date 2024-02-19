@@ -3,7 +3,7 @@ local M = {}
 function M.server(name, setup)
     return {
         name = name,
-        setup = setup and setup or {},
+        setup = setup or {},
     }
 end
 

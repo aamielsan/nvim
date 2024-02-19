@@ -1,5 +1,5 @@
-local arr = require("lua.array")
-local lang = require("lua.language-server")
+local arr = require("array")
+local lang = require("language-server")
 
 -- Reference: https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local lsp_servers = {
@@ -29,6 +29,17 @@ local lsp_servers = {
     lang.server('jedi_language_server'),
     lang.server('tailwindcss'),
 }
+
+local ensure_installed_from = function(servers)
+    return arr.map(servers, function(s) return s.name end)
+end
+
+local handlers_from = function(servers, init)
+    return arr.reduce(servers, function (acc, s)
+        acc[s.name] = require('lspconfig')[s.name].setup(s.setup)
+        return acc
+    end, init)
+end
 
 return {
     -- Reference: https://lsp-zero.netlify.app/v3.x/guide/lazy-loading-with-lazy-nvim.html
@@ -68,8 +79,8 @@ return {
                 formatting = lsp_zero.cmp_format(),
                 mapping = cmp.mapping.preset.insert({
                     ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-j>'] = cmp.mapping.select_next_item(select),
-                    ['<C-k>'] = cmp.mapping.select_prev_item(select),
+                    ['<Tab>'] = cmp.mapping.select_next_item(select),
+                    ['<S-Tab>'] = cmp.mapping.select_prev_item(select),
                     ['<Enter>'] = cmp.mapping.confirm({ select = true }),
                 }),
             })
@@ -110,17 +121,6 @@ return {
                 -- to learn the available actions
                 lsp_zero.default_keymaps({ buffer = bufnr })
             end)
-
-            local function ensure_installed_from(servers)
-                return arr.map(servers, function(s) return s.name end)
-            end
-
-            local function handlers_from(servers, init)
-                return arr.reduce(servers, function (acc, s)
-                    acc[s.name] = require('lspconfig')[s.name].setup(s.setup)
-                    return acc
-                end, init)
-            end
 
             require('mason-lspconfig').setup({
                 ensure_installed = ensure_installed_from(lsp_servers),
