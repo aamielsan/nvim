@@ -1,8 +1,8 @@
-
 return {
     -- https://github.com/nvim-treesitter/nvim-treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        version = "v0.9.2",
         build = ":TSUpdate",
         setup = {
             -- A list of parser names, or "all" (the five listed parsers should always be installed)
