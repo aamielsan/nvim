@@ -34,7 +34,9 @@ return {
 
         require("nvim-tree").setup({
             disable_netrw = true,
-            respect_buf_cwd = true,
+            update_focused_file = {
+                enable = true,
+            },
             on_attach = on_attach,
         })
 
