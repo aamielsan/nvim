@@ -1,38 +1,16 @@
 -- https://github.com/rose-pine/neovim
+local function rose_pine()
+    local default = "auto"
 
-local default = "auto" -- auto, main, moon, dawn
+    local function colorscheme(variant)
+        require("rose-pine").colorscheme(variant)
+    end
 
-local function colorscheme(rose_pine, variant)
-    rose_pine.colorscheme(variant)
-end
-
-return {
-    {
-        "nvim-lualine/lualine.nvim",
-        event = 'BufReadPre',
-        config = function()
-            require("lualine").setup({
-                options = {
-                    theme = "rose-pine",
-                    sections = {
-                        lualine_a = {"mode"},
-                        lualine_b = {"branch", "diff", "diagnostics"},
-                        lualine_c = {"filename"},
-                        lualine_x = {"encoding", "fileformat", "filetype"},
-                        lualine_y = {"progress"},
-                        lualine_z = {"location"}
-                    },
-                }
-            })
-        end
-    },
-    {
+    return {
         "rose-pine/neovim",
         name = "rose-pine",
         config = function()
-            local rose_pine = require("rose-pine")
-
-            rose_pine.setup({
+            require("rose-pine").setup({
                 variant = "auto", -- auto, main, moon, or dawn
                 dark_variant = "moon", -- main, moon, or dawn
                 dim_inactive_windows = false,
@@ -81,7 +59,10 @@ return {
                     h6 = "foam",
                 },
 
-                highlight_groups = {},
+                highlight_groups = {
+                    -- Comment = { fg = "foam" },
+                    -- VertSplit = { fg = "muted", bg = "muted" },
+                },
 
                 before_highlight = function(group, highlight, palette)
                     -- Disable all undercurls
@@ -96,8 +77,44 @@ return {
                 end,
             })
 
-            colorscheme(rose_pine, default)
+            colorscheme(default)
 
         end,
     }
+end
+
+local function gruvbox()
+    return {
+        "ellisonleao/gruvbox.nvim",
+        config = function()
+            vim.cmd("colorscheme gruvbox")
+        end,
+    }
+end
+
+local function theme()
+    return rose_pine()
+end
+
+return {
+    theme(),
+    {
+        "nvim-lualine/lualine.nvim",
+        vent = "BufReadPre",
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "auto",
+                    sections = {
+                        lualine_a = {"mode"},
+                        lualine_b = {"branch", "diff", "diagnostics"},
+                        lualine_c = {"filename"},
+                        lualine_x = {"encoding", "fileformat", "filetype"},
+                        lualine_y = {"progress"},
+                        lualine_z = {"location"}
+                    },
+                }
+            })
+        end
+    },
 }
