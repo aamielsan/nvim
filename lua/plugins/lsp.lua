@@ -8,7 +8,38 @@ local lsp_servers = {
         -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#configuration
         settings = {
             gopls = {
+                gofumpt = true,
+                codelenses = {
+                    gc_details = false,
+                    generate = true,
+                    regenerate_cgo = true,
+                    run_govulncheck = true,
+                    test = true,
+                    tidy = true,
+                    upgrade_dependency = true,
+                    vendor = true,
+                },
+                hints = {
+                    assignVariableTypes = true,
+                    compositeLiteralFields = true,
+                    compositeLiteralTypes = true,
+                    constantValues = true,
+                    functionTypeParameters = true,
+                    parameterNames = true,
+                    rangeVariableTypes = true,
+                },
+                analyses = {
+                    fieldalignment = true,
+                    nilness = true,
+                    unusedparams = true,
+                    unusedwrite = true,
+                    useany = true,
+                },
                 usePlaceholders = true,
+                completeUnimported = true,
+                staticcheck = true,
+                directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+                semanticTokens = true,
             },
         },
     }),
@@ -45,7 +76,7 @@ local handlers_from = function(servers, init)
 end
 
 return {
-    -- Reference: https://lsp-zero.netlify.app/v3.x/guide/lazy-loading-with-lazy-nvim.html
+    -- https://lsp-zero.netlify.app/v3.x/guide/lazy-loading-with-lazy-nvim.html
     {
         "VonHeikemen/lsp-zero.nvim",
         branch = "v3.x",
@@ -119,10 +150,20 @@ return {
 
             --- if you want to know more about lsp-zero and mason.nvim
             --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
-            lsp_zero.on_attach(function(_, bufnr)
+            lsp_zero.on_attach(function(client, bufnr)
                 -- see :help lsp-zero-keybindings
                 -- to learn the available actions
                 lsp_zero.default_keymaps({ buffer = bufnr })
+
+                -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
+                if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
+                    local semantic = client.config.capabilities.textDocument.semanticTokens
+                    client.server_capabilities.semanticTokensProvider = {
+                        full = true,
+                        legend = {tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes},
+                        range = true,
+                    }
+                end
             end)
 
             require("mason-lspconfig").setup({
@@ -130,5 +171,5 @@ return {
                 handlers = handlers_from(lsp_servers, { lsp_zero.default_setup }),
             })
         end
-    }
+    },
 }
