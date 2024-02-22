@@ -13,7 +13,7 @@ return {
                         sort_lastused = true,
                         mappings = {
                             i = {
-                                ["<C-q>"] = "delete_buffer",
+                                ["<Leader>q"] = "delete_buffer",
                             }
                         }
                     },
