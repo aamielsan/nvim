@@ -83,21 +83,17 @@ local function rose_pine()
     }
 end
 
-local function gruvbox()
+local function melange()
     return {
-        "ellisonleao/gruvbox.nvim",
+        "savq/melange-nvim",
         config = function()
-            vim.cmd("colorscheme gruvbox")
+            vim.cmd("colorscheme melange")
         end,
     }
 end
 
-local function theme()
-    return rose_pine()
-end
-
 return {
-    theme(),
+    melange(),
     {
         "nvim-lualine/lualine.nvim",
         vent = "BufReadPre",
