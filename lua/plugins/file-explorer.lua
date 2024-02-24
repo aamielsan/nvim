@@ -1,3 +1,13 @@
+local function opts(desc)
+    return {
+        desc = "nvim-tree: " .. desc,
+        -- buffer = bufnr, -- relevant if we want to override an existing keymap in nvim-tree buffer
+        noremap = true,
+        silent = true,
+        nowait = true,
+    }
+end
+
 local function toggle()
     local api = require("nvim-tree.api")
     local current_buf = vim.api.nvim_get_current_buf()
@@ -19,18 +29,6 @@ return {
             local function on_attach(bufnr)
                 local api = require("nvim-tree.api")
                 api.config.mappings.default_on_attach(bufnr)
-
-                local function opts(desc)
-                    return {
-                        desc = "nvim-tree: " .. desc,
-                        -- buffer = bufnr, -- relevant if we want to override an existing keymap in nvim-tree buffer
-                        noremap = true,
-                        silent = true,
-                        nowait = true,
-                    }
-                end
-
-                vim.keymap.set("n", "<Leader>l", toggle, opts("Toggle"))
             end
 
             require("nvim-tree").setup({
@@ -41,8 +39,7 @@ return {
                 on_attach = on_attach,
             })
 
-            -- open on start
-            vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = require("nvim-tree.api").tree.open })
+            vim.keymap.set("n", "<Leader>l", toggle, opts("Toggle"))
         end,
     },
 }
