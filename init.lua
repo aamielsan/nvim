@@ -1,3 +1,3 @@
 require("config.options")
-require("config.packager")
+require("config.package-manager")
 require("config.keymaps")
