@@ -1,5 +1,5 @@
-local arr = require("array")
-local lang = require("language-server")
+local arr = require("internal.array")
+local lang = require("internal.language-server")
 
 -- https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local lsp_servers = {
