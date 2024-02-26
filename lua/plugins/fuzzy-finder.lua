@@ -11,6 +11,9 @@ return {
                     buffers = {
                         sort_lastused = true,
                         mappings = {
+                            i = {
+                                ["<Leader>q"] = "delete_buffer",
+                            },
                             n = {
                                 ["<Leader>q"] = "delete_buffer",
                             }
