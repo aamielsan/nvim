@@ -44,52 +44,35 @@ return {
         end,
     },
     -- https://github.com/nvim-treesitter/nvim-treesitter
+    -- `main` branch: needs Neovim 0.12+, the `tree-sitter` CLI and a C compiler
     {
         "nvim-treesitter/nvim-treesitter",
-        version = "v0.9.3",
+        branch = "main",
+        lazy = false, -- does not support lazy-loading
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.configs").setup({
-                -- A list of parser names, or "all" (the five listed parsers should always be installed)
-                -- Reference: https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#supported-languages
-                ensure_installed = {
-                    -- required
-                    "c",
-                    "lua",
-                    "vim",
-                    "vimdoc",
-                    "query",
+            -- c, lua, vim, vimdoc, query and markdown parsers ship with Neovim
+            -- Reference: https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md
+            require("nvim-treesitter").install({
+                "go",
+                "gomod",
+                "gosum",
+                "gowork",
+                "html",
+                "javascript",
+                "json",
+                "kotlin",
+                "rust",
+                "tsx",
+                "typescript",
+                "yaml",
+            })
 
-                    -- optional
-                    "go",
-                    "gomod",
-                    "gosum",
-                    "gowork",
-                    "javascript",
-                    "json",
-                    "kotlin",
-                    "rust",
-                    "tsx",
-                    "typescript",
-                    "yaml",
-                },
-
-                -- Install parsers synchronously (only applied to `ensure_installed`)
-                sync_install = false,
-
-                -- Automatically install missing parsers when entering buffer
-                -- Recommendation: set to false if you don"t have `tree-sitter` CLI installed locally
-                auto_install = false,
-
-                highlight = {
-                    enable = true,
-
-                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-                    -- Set this to `true` if you depend on "syntax" being enabled (like for indentation).
-                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-                    -- Instead of true it can also be a list of languages
-                    additional_vim_regex_highlighting = false,
-                },
+            -- highlighting is built into Neovim; start it for every filetype that has a parser
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(args)
+                    pcall(vim.treesitter.start, args.buf)
+                end,
             })
         end,
     },
