@@ -5,6 +5,12 @@ vim.g.markdown_fenced_languages = {
   "ts=typescript"
 }
 
+-- no plugins use the language providers
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
 local opt = vim.opt
 
 opt.clipboard = "unnamedplus" -- use system clipboard
@@ -31,7 +37,6 @@ opt.backup = false
 
 -- undo history
 opt.undofile = true
-opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 
 -- search
 opt.hlsearch = true

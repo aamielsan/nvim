@@ -140,54 +140,23 @@ return {
                 automatic_enable = false, -- servers are enabled explicitly with vim.lsp.enable above
             })
 
-            -- LspAttach autocmd for keymaps & workarounds
+            -- LSP keymaps for the attached buffer
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
-
-                    -- LSP keymaps (equivalent to lsp-zero defaults)
-                    vim.keymap.set("n", "K", vim.lsp.buf.hover)
-                    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
-                    vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
-                    vim.keymap.set("n", "go", vim.lsp.buf.type_definition)
-                    vim.keymap.set("n", "gr", vim.lsp.buf.references)
-                    vim.keymap.set("n", "gs", vim.lsp.buf.signature_help)
-                    vim.keymap.set("n", "gl", function()
-                        vim.diagnostic.open_float({ border = "rounded" })
-                    end)
-                    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-                    vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-
-                    -- Go semantic tokens workaround
-                    -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-                    local client = vim.lsp.get_client_by_id(args.data.client_id)
-
-                    if client and client.name == "gopls" then
-                        if not client.server_capabilities.semanticTokensProvider then
-                            local semantic = client.config.capabilities.textDocument.semanticTokens
-                            if semantic then
-                                client.server_capabilities.semanticTokensProvider = {
-                                    full = true,
-                                    legend = {
-                                        tokenModifiers = semantic.tokenModifiers,
-                                        tokenTypes = semantic.tokenTypes,
-                                    },
-                                    range = true,
-                                }
-                            end
-                        end
+                    local function map(lhs, rhs)
+                        vim.keymap.set("n", lhs, rhs, { buffer = args.buf })
                     end
-                end,
-            })
 
-            -- Format on save for Go files
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = "*.go",
-                callback = function()
-                    vim.lsp.buf.format({
-                        async = false,
-                        timeout_ms = 10000,
-                    })
+                    map("K", vim.lsp.buf.hover)
+                    map("gd", vim.lsp.buf.definition)
+                    map("gD", vim.lsp.buf.declaration)
+                    map("gi", vim.lsp.buf.implementation)
+                    map("go", vim.lsp.buf.type_definition)
+                    map("gr", vim.lsp.buf.references)
+                    map("gs", vim.lsp.buf.signature_help)
+                    map("gl", function() vim.diagnostic.open_float({ border = "rounded" }) end)
+                    map("[d", function() vim.diagnostic.jump({ count = -1, float = true }) end)
+                    map("]d", function() vim.diagnostic.jump({ count = 1, float = true }) end)
                 end,
             })
         end,

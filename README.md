@@ -3,12 +3,16 @@
 Contains Neovim configuration using Lua as the configuration language.
 
 ## Getting started
-1. Install [neovim.io](https://neovim.io/)
-2. Install `ripgrep` for fuzzy finder (`telescope.nvim`)
-3. Clone repository to `~/.config/nvim/`
+1. Install the dependencies. The [dotfiles](https://github.com/aamielsan/dotfiles) mise config installs all of them:
+   - `neovim` 0.12+
+   - `ripgrep` and `fd` for the pickers (`snacks.nvim`)
+   - `tree-sitter` CLI and a C compiler (Xcode Command Line Tools) to build parsers (`nvim-treesitter`)
+   - `node`, `go` and `python` so Mason can install the language servers and formatters
+2. Clone repository to `~/.config/nvim/` (the dotfiles bootstrap does this)
+3. Start `nvim`: `lazy.nvim` installs the plugins, and Mason installs the language servers and formatters
 
 ## Useful commands
-1. `:Lazy`: opens the window for the plugin manager (`lazy.nvim`).
+1. `:Lazy`: opens the window for the plugin manager (`lazy.nvim`). Update plugins with `:Lazy update`; there is no automatic update check.
 2. `:Mason`: opens the window for the package manager for LSP servers, DAP servers, linters, and formatters (`mason.nvim`).
 
 ## Folder structure
