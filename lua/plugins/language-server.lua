@@ -1,7 +1,7 @@
 local arr = require("internal.array")
 local lang = require("internal.language-server")
 
--- https://github.com/williamboman/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
+-- https://github.com/mason-org/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
 local lsp_servers = {
     lang.server("dockerls"),
     lang.server("eslint"),
@@ -44,11 +44,16 @@ local lsp_servers = {
             },
         },
     }),
-    lang.server("gradle_ls"),
+    lang.server("basedpyright", {
+        -- python
+        settings = {
+            basedpyright = {
+                analysis = { typeCheckingMode = "standard" }, -- default "recommended" is very noisy
+            },
+        },
+    }),
     lang.server("html"),
-    lang.server("jedi_language_server"), -- python
     lang.server("jsonls"), -- json
-    lang.server("kotlin_language_server"),
     lang.server("lua_ls", {
         -- https://luals.github.io/wiki/configuration/#neovim
         settings = {
@@ -73,15 +78,20 @@ local server_names = function(servers)
 end
 
 return {
+    -- https://github.com/mason-org/mason.nvim
     {
-        "williamboman/mason.nvim",
-        lazy = false,
-        config = true,
+        "mason-org/mason.nvim",
+        lazy = false, -- puts mason/bin on PATH so conform finds the formatters
+        opts = {},
+    },
+    -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
+    -- installs non-LSP tools (formatters); LSP servers are installed by mason-lspconfig below
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "mason-org/mason.nvim" },
         opts = {
-            ensure_installed = {
-                "prettier"
-            }
-        }
+            ensure_installed = { "prettierd", "ruff", "stylua" },
+        },
     },
     -- Autocompletion
     {
@@ -127,7 +137,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             { "hrsh7th/cmp-nvim-lsp" },
-            { "williamboman/mason-lspconfig.nvim" },
+            { "mason-org/mason-lspconfig.nvim" },
         },
         config = function()
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -146,6 +156,7 @@ return {
             -- Mason for auto-installation
             require("mason-lspconfig").setup({
                 ensure_installed = server_names(lsp_servers),
+                automatic_enable = false, -- servers are enabled explicitly with vim.lsp.enable above
             })
 
             -- LspAttach autocmd for keymaps & workarounds

@@ -8,7 +8,7 @@ return {
             {
                 "=", -- The key you want
                 function()
-                    require("conform").format({ async = true, lsp_fallback = true })
+                    require("conform").format({ async = true, lsp_format = "fallback" })
                 end,
                 mode = { "n", "v" }, -- Works in both Normal and Visual mode
                 desc = "Format buffer or selection",
@@ -22,7 +22,7 @@ return {
             formatters_by_ft = {
                 javascript = { "prettierd", "prettier", stop_after_first = true },
                 lua = { "stylua" },
-                python = { "isort", "black" },
+                python = { "ruff_organize_imports", "ruff_format" },
                 typescript = { "prettierd", "prettier", stop_after_first = true },
                 typescriptreact = { "prettierd", "prettier", stop_after_first = true },
             },
