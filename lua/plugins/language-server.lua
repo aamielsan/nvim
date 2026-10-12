@@ -54,6 +54,7 @@ local lsp_servers = {
     }),
     lang.server("html"),
     lang.server("jsonls"), -- json
+    lang.server("kotlin_lsp"),
     lang.server("lua_ls", {
         -- https://luals.github.io/wiki/configuration/#neovim
         settings = {
