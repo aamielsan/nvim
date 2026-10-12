@@ -1,51 +1,36 @@
-local function opts(desc)
-    return {
-        desc = "nvim-tree: " .. desc,
-        -- buffer = bufnr, -- relevant if we want to override an existing keymap in nvim-tree buffer
-        noremap = true,
-        silent = true,
-        nowait = true,
-    }
-end
-
+-- focus the explorer, or close it when it already has focus
 local function toggle()
-    local api = require("nvim-tree.api")
-    local current_buf = vim.api.nvim_get_current_buf()
-    local current_buftype = vim.api.nvim_get_option_value("filetype", { buf = current_buf })
-    if current_buftype == "NvimTree" then
-        api.tree.close()
+    local explorer = Snacks.picker.get({ source = "explorer" })[1]
+    if explorer and explorer:is_focused() then
+        explorer:close()
+    elseif explorer then
+        explorer:focus()
     else
-        api.tree.focus()
+        Snacks.explorer()
     end
 end
 
+-- https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md
 return {
     {
-        "nvim-tree/nvim-tree.lua",
-        -- version = "1.0.0",
-        lazy = false,
+        "folke/snacks.nvim",
+        lazy = false, -- needed to replace netrw when opening a directory
+        priority = 1000,
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            local function on_attach(bufnr)
-                local api = require("nvim-tree.api")
-                api.config.mappings.default_on_attach(bufnr)
-            end
-
-            require("nvim-tree").setup({
-                view = {
-                    width = '20%',
+        opts = {
+            explorer = {
+                replace_netrw = true,
+            },
+            picker = {
+                sources = {
+                    explorer = {
+                        layout = { layout = { width = 0.2 } },
+                    },
                 },
-                disable_netrw = true,
-                filters = {
-                    dotfiles = true,
-                },
-                update_focused_file = {
-                    enable = true,
-                },
-                on_attach = on_attach,
-            })
-
-            vim.keymap.set("n", "<Leader>l", toggle, opts("Toggle"))
-        end,
+            },
+        },
+        keys = {
+            { "<Leader>l", toggle, desc = "Explorer: Toggle" },
+        },
     },
 }

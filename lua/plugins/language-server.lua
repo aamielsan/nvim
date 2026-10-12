@@ -94,40 +94,26 @@ return {
         },
     },
     -- Autocompletion
+    -- https://cmp.saghen.dev/
     {
-        "hrsh7th/nvim-cmp",
+        "saghen/blink.cmp",
+        version = "1.*", -- downloads a prebuilt fuzzy matcher for this version
         event = "InsertEnter",
-        dependencies = {
-            { "L3MON4D3/LuaSnip" },
-            { "rafamadriz/friendly-snippets" },
-            { "saadparwaiz1/cmp_luasnip" },
-            { "hrsh7th/cmp-nvim-lsp" },
+        dependencies = { "rafamadriz/friendly-snippets" },
+        ---@module "blink.cmp"
+        ---@type blink.cmp.Config
+        opts = {
+            keymap = {
+                preset = "default",
+                ["<C-Space>"] = { "show", "fallback" },
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<Enter>"] = { "accept", "fallback" },
+            },
+            sources = {
+                default = { "lsp", "snippets" },
+            },
         },
-        config = function()
-            -- bind vscode like snippets to luasnip
-            require("luasnip.loaders.from_vscode").lazy_load()
-
-            local cmp = require("cmp")
-            local select = { behavior = cmp.SelectBehavior.Select }
-
-            cmp.setup({
-                sources = {
-                    { name = "nvim_lsp" },
-                    { name = "luasnip" },
-                },
-                snippet = {
-                    expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
-                    end,
-                },
-                mapping = cmp.mapping.preset.insert({
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<Tab>"] = cmp.mapping.select_next_item(select),
-                    ["<S-Tab>"] = cmp.mapping.select_prev_item(select),
-                    ["<Enter>"] = cmp.mapping.confirm({ select = true }),
-                }),
-            })
-        end,
     },
 
     -- LSP
@@ -136,18 +122,13 @@ return {
         cmd = { "LspInfo", "LspInstall", "LspStart" },
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
-            { "hrsh7th/cmp-nvim-lsp" },
             { "mason-org/mason-lspconfig.nvim" },
         },
         config = function()
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
             -- Configure all LSP servers using vim.lsp.config (Neovim 0.11+)
+            -- blink.cmp adds its completion capabilities automatically
             for _, s in ipairs(lsp_servers) do
-                local config = vim.tbl_deep_extend("force", {
-                    capabilities = capabilities,
-                }, s.setup)
-                vim.lsp.config(s.name, config)
+                vim.lsp.config(s.name, s.setup)
             end
 
             -- Enable all configured servers

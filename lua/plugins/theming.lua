@@ -12,13 +12,13 @@ return {
     {
         "nvim-lualine/lualine.nvim",
         lazy = false,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("lualine").setup({
                 options = {
                     theme = "auto",
                     globalstatus = true,
                 },
-                extensions = { "nvim-tree" },
                 sections = {
                     lualine_a = {"mode"},
                     lualine_b = {"branch", "diff", "diagnostics"},
