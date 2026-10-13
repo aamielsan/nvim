@@ -32,12 +32,6 @@ return {
             },
             -- Set up format-on-save
             format_on_save = { timeout_ms = 500 },
-            -- Customize formatters
-            formatters = {
-                shfmt = {
-                    append_args = { "-i", "2" },
-                },
-            },
         },
         init = function()
             vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

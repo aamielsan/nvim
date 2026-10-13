@@ -1,10 +1,5 @@
 vim.g.mapleader = " "
 
--- deno
-vim.g.markdown_fenced_languages = {
-  "ts=typescript"
-}
-
 -- no plugins use the language providers
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
@@ -19,6 +14,7 @@ opt.clipboard = "unnamedplus" -- use system clipboard
 opt.termguicolors = true -- true color support
 opt.cursorline = true -- highlight current line
 opt.wrap = false -- nowrap
+opt.winborder = "rounded" -- borders on all floating windows
 
 -- line numbers
 opt.number = true -- show line numbers
@@ -45,7 +41,7 @@ opt.incsearch = true
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 
-opt.updatetime = 50
+opt.updatetime = 250
 
 -- auto-reload files when changed externally
 opt.autoread = true

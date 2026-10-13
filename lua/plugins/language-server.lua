@@ -10,25 +10,6 @@ local lsp_servers = {
         settings = {
             gopls = {
                 -- gofumpt = true,
-                codelenses = {
-                    gc_details = false,
-                    generate = true,
-                    regenerate_cgo = true,
-                    run_govulncheck = true,
-                    test = true,
-                    tidy = true,
-                    upgrade_dependency = true,
-                    vendor = true,
-                },
-                hints = {
-                    assignVariableTypes = true,
-                    compositeLiteralFields = true,
-                    compositeLiteralTypes = true,
-                    constantValues = true,
-                    functionTypeParameters = true,
-                    parameterNames = true,
-                    rangeVariableTypes = true,
-                },
                 analyses = {
                     fieldalignment = false,
                     nilness = true,
@@ -153,9 +134,10 @@ return {
                     map("gD", vim.lsp.buf.declaration)
                     map("gi", vim.lsp.buf.implementation)
                     map("go", vim.lsp.buf.type_definition)
-                    map("gr", vim.lsp.buf.references)
+                    -- nowait: Neovim 0.12's default grn/gra/grr/gri/grt would otherwise delay gr
+                    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = args.buf, nowait = true })
                     map("gs", vim.lsp.buf.signature_help)
-                    map("gl", function() vim.diagnostic.open_float({ border = "rounded" }) end)
+                    map("gl", vim.diagnostic.open_float)
                     map("[d", function() vim.diagnostic.jump({ count = -1, float = true }) end)
                     map("]d", function() vim.diagnostic.jump({ count = 1, float = true }) end)
                 end,
