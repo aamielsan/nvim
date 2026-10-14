@@ -11,3 +11,5 @@ keymap.set("n", "k", "gk")
 keymap.set("n", "<Esc>", ":nohl<CR><Esc>", silent)
 keymap.set({ "n", "i", "v" }, "<C-s>", "<C-C>:update<CR>", silent)
 
+-- close the quickfix and location lists (gr references, gO symbols) from any window
+keymap.set("n", "<Leader>x", "<Cmd>cclose | lclose<CR>", silent)
