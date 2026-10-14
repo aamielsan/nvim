@@ -35,7 +35,10 @@ local lsp_servers = {
     }),
     lang.server("html"),
     lang.server("jsonls"), -- json
-    lang.server("kotlin_lsp"),
+    lang.server("kotlin_lsp", {
+        -- keep caches and indexes between sessions, so reopening a project answers in seconds
+        cmd = { "intellij-server", "--stdio", "--system-path=" .. vim.fn.stdpath("cache") .. "/kotlin-lsp" },
+    }),
     lang.server("lua_ls", {
         -- https://luals.github.io/wiki/configuration/#neovim
         settings = {
@@ -118,7 +121,8 @@ return {
 
             -- Mason for auto-installation
             require("mason-lspconfig").setup({
-                ensure_installed = server_names(lsp_servers),
+                -- kotlin_lsp comes from mise until Mason's package downloads again (mason-registry#17323)
+                ensure_installed = vim.tbl_filter(function(name) return name ~= "kotlin_lsp" end, server_names(lsp_servers)),
                 automatic_enable = false, -- servers are enabled explicitly with vim.lsp.enable above
             })
 
