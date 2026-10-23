@@ -4,19 +4,10 @@ local servers = {
     dockerls = {},
     eslint = {},
     gopls = {
-        -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#configuration
+        -- https://github.com/golang/tools/blob/master/gopls/doc/settings.md
         settings = {
             gopls = {
-                -- gofumpt = true,
-                analyses = {
-                    fieldalignment = false,
-                    nilness = true,
-                    unusedparams = true,
-                    unusedwrite = true,
-                    useany = true,
-                },
                 usePlaceholders = true,
-                completeUnimported = true,
                 staticcheck = true,
                 directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
                 semanticTokens = true,
