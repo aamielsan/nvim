@@ -28,7 +28,6 @@ return {
             terminal = {},
         },
         keys = {
-            { "<leader>t", function() Snacks.terminal.toggle(nil, { win = { position = "float", border = "rounded", width = 0.8, height = 0.9 } }) end, desc = "Terminal" },
             { "<leader>tf", function() Snacks.terminal.toggle(nil, { win = { position = "float", border = "rounded", width = 0.8, height = 0.9 } }) end, desc = "Terminal Float" },
             { "<leader>th", function() Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 15 } }) end, desc = "Terminal Horizontal" },
             { "<leader>tv", function() Snacks.terminal.toggle(nil, { win = { position = "right", width = 0.4 } }) end, desc = "Terminal Vertical" },
