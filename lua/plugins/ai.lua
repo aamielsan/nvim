@@ -1,86 +1,28 @@
+-- Claude Code inside Neovim, connected through Claude's IDE protocol (`/ide`): Claude sees the
+-- current file, selection and diagnostics, and its edits open as diffs (:w accepts, :q rejects).
+-- https://github.com/coder/claudecode.nvim
 return {
     {
-        "folke/sidekick.nvim",
+        "coder/claudecode.nvim",
         dependencies = { "folke/snacks.nvim" },
+        event = "VeryLazy", -- start the /ide server with Neovim, so Claude in a tmux window can connect too
         opts = {
-            nes = {
-                enabled = false,
-            },
-            cli = {
-                mux = {
-                    enabled = true,
-                    backend = "tmux",
-                },
-                tools = {
-                    raicode = {
-                        cmd = { "raicode" },
-                    },
-                },
+            -- DNB's wrapper where it's installed (work laptop), plain `claude` elsewhere
+            terminal_cmd = vim.fn.executable("raicode") == 1 and "raicode" or nil,
+            terminal = {
+                -- Esc goes to Claude only (it stops a running task); Ctrl-Q leaves terminal mode
+                snacks_win_opts = { keys = { term_normal = false } },
             },
         },
         keys = {
-            {
-                "<C-,>",
-                function() require("sidekick.cli").toggle() end,
-                desc = "Sidekick Toggle",
-                mode = { "n", "t", "i", "x" },
-            },
-            {
-                "<leader>aa",
-                function() require("sidekick.cli").toggle() end,
-                desc = "Sidekick Toggle CLI",
-            },
-            {
-                "<leader>as",
-                function()
-                    require("sidekick.cli").select({
-                        cb = function(state)
-                            if not state then
-                                return
-                            end
-                            local State = require("sidekick.cli.state")
-                            State.attach(state, { show = true, focus = true })
-                            if state.external and state.session and state.session.tmux_pane_id then
-                                vim.system({ "tmux", "select-pane", "-t", state.session.tmux_pane_id })
-                            end
-                        end,
-                    })
-                end,
-                desc = "Select CLI",
-            },
-            {
-                "<leader>ad",
-                function() require("sidekick.cli").close() end,
-                desc = "Detach a CLI Session",
-            },
-            {
-                "<leader>at",
-                function() require("sidekick.cli").send({ msg = "{this}" }) end,
-                mode = { "x", "n" },
-                desc = "Send This",
-            },
-            {
-                "<leader>af",
-                function() require("sidekick.cli").send({ msg = "{file}" }) end,
-                desc = "Send File",
-            },
-            {
-                "<leader>av",
-                function() require("sidekick.cli").send({ msg = "{selection}" }) end,
-                mode = { "x" },
-                desc = "Send Visual Selection",
-            },
-            {
-                "<leader>ap",
-                function() require("sidekick.cli").prompt() end,
-                mode = { "n", "x" },
-                desc = "Sidekick Select Prompt",
-            },
-            {
-                "<leader>ac",
-                function() require("sidekick.cli").toggle({ name = "raicode", focus = true }) end,
-                desc = "Sidekick Toggle Raicode",
-            },
+            { "<C-,>", "<cmd>ClaudeCodeFocus<cr>", mode = { "n", "t", "i", "x" }, desc = "Claude: focus or toggle" },
+            { "<leader>aa", "<cmd>ClaudeCode<cr>", desc = "Claude: toggle" },
+            { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Claude: toggle" },
+            { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Claude: resume a session" },
+            { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Claude: continue the last session" },
+            { "<leader>af", "<cmd>ClaudeCodeAdd %<cr>", desc = "Claude: add the current file" },
+            { "<leader>av", "<cmd>ClaudeCodeSend<cr>", mode = "x", desc = "Claude: send the selection" },
+            { "<leader>at", "<cmd>ClaudeCodeSend<cr>", mode = "x", desc = "Claude: send the selection" },
         },
-    }
+    },
 }
