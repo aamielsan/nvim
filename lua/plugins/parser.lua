@@ -6,19 +6,15 @@ return {
         cmd = { "ConformInfo" },
         keys = {
             {
-                "=", -- The key you want
-                function()
-                    require("conform").format({ async = true, lsp_format = "fallback" })
-                end,
-                mode = { "n", "v" }, -- Works in both Normal and Visual mode
+                "=",
+                function() require("conform").format({ async = true }) end,
+                mode = { "n", "v" },
                 desc = "Format buffer or selection",
             },
         },
-        -- This will provide type hinting with LuaLS
         ---@module "conform"
         ---@type conform.setupOpts
         opts = {
-            -- Define your formatters
             formatters_by_ft = {
                 javascript = { "prettierd", "prettier", stop_after_first = true },
                 lua = { "stylua" },
@@ -26,11 +22,9 @@ return {
                 typescript = { "prettierd", "prettier", stop_after_first = true },
                 typescriptreact = { "prettierd", "prettier", stop_after_first = true },
             },
-            -- Set default options
             default_format_opts = {
-                lsp_format = "fallback",
+                lsp_format = "fallback", -- use the language server when no formatter is listed
             },
-            -- Set up format-on-save
             format_on_save = { timeout_ms = 500 },
         },
         init = function()
