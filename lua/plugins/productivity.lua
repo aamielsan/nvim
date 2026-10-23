@@ -14,13 +14,6 @@ return {
         event = "VeryLazy",
         config = true
     },
-    -- https://github.com/nvzone/typr
-    {
-        "nvzone/typr",
-        dependencies = "nvzone/volt",
-        opts = {},
-        cmd = { "Typr", "TyprStats" },
-    },
     -- https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md
     {
         "folke/snacks.nvim",

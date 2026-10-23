@@ -37,7 +37,6 @@ local servers = {
             },
         },
     },
-    tailwindcss = {},
     ts_ls = {}, -- lspconfig's root detection already skips Deno projects
     yamlls = {},
 }
