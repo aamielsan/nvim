@@ -1,3 +1,25 @@
+-- One shared terminal: each key moves it to that position, or hides it if it's already there.
+-- `exit` in the shell closes it for good; the next key starts a new one.
+local terminal_positions = {
+    float = { position = "float", border = "rounded", width = 0.55, height = 0.75 },
+    bottom = { position = "bottom", border = "none", height = 15 }, -- splits only use one size
+    right = { position = "right", border = "none", width = 0.4 },
+}
+local function terminal(where)
+    local win = terminal_positions[where]
+    local term = Snacks.terminal.get(nil, { create = false })
+    if not (term and term:buf_valid()) then
+        return Snacks.terminal.open(nil, { win = win })
+    end
+    if term:valid() and term.opts.position == win.position then
+        return term:hide()
+    end
+    term:hide()
+    term.opts = vim.tbl_extend("force", term.opts, win)
+    term:show()
+    vim.cmd.startinsert() -- back to typing in the shell, as when it first opens
+end
+
 return {
     -- https://github.com/tpope/vim-sleuth
     { "tpope/vim-sleuth" },
@@ -21,9 +43,9 @@ return {
             terminal = {},
         },
         keys = {
-            { "<leader>tf", function() Snacks.terminal.toggle(nil, { win = { position = "float", border = "rounded", width = 0.8, height = 0.9 } }) end, desc = "Terminal Float" },
-            { "<leader>th", function() Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 15 } }) end, desc = "Terminal Horizontal" },
-            { "<leader>tv", function() Snacks.terminal.toggle(nil, { win = { position = "right", width = 0.4 } }) end, desc = "Terminal Vertical" },
+            { "<leader>tf", function() terminal("float") end, desc = "Terminal Float" },
+            { "<leader>th", function() terminal("bottom") end, desc = "Terminal Horizontal" },
+            { "<leader>tv", function() terminal("right") end, desc = "Terminal Vertical" },
         },
     },
 }
