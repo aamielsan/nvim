@@ -41,6 +41,15 @@ return {
         "folke/snacks.nvim",
         opts = {
             terminal = {},
+            styles = {
+                terminal = {
+                    keys = {
+                        -- Ctrl-Q leaves terminal mode without sending anything to the program;
+                        -- Esc Esc still works, but its first Esc reaches the program
+                        stop_insert = { "<c-q>", function() vim.cmd.stopinsert() end, mode = "t", desc = "Leave terminal mode" },
+                    },
+                },
+            },
         },
         keys = {
             { "<leader>tf", function() terminal("float") end, desc = "Terminal Float" },
