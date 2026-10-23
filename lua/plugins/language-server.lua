@@ -1,11 +1,9 @@
-local arr = require("internal.array")
-local lang = require("internal.language-server")
-
--- https://github.com/mason-org/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
-local lsp_servers = {
-    lang.server("dockerls"),
-    lang.server("eslint"),
-    lang.server("gopls", {
+-- Language servers and their settings on top of nvim-lspconfig's defaults.
+-- Names: https://github.com/mason-org/mason-lspconfig.nvim?tab=readme-ov-file#available-lsp-servers
+local servers = {
+    dockerls = {},
+    eslint = {},
+    gopls = {
         -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#configuration
         settings = {
             gopls = {
@@ -24,22 +22,21 @@ local lsp_servers = {
                 semanticTokens = true,
             },
         },
-    }),
-    lang.server("basedpyright", {
-        -- python
+    },
+    basedpyright = { -- python
         settings = {
             basedpyright = {
                 analysis = { typeCheckingMode = "standard" }, -- default "recommended" is very noisy
             },
         },
-    }),
-    lang.server("html"),
-    lang.server("jsonls"), -- json
-    lang.server("kotlin_lsp", {
+    },
+    html = {},
+    jsonls = {},
+    kotlin_lsp = {
         -- keep caches and indexes between sessions, so reopening a project answers in seconds
         cmd = { "intellij-server", "--stdio", "--system-path=" .. vim.fn.stdpath("cache") .. "/kotlin-lsp" },
-    }),
-    lang.server("lua_ls", {
+    },
+    lua_ls = {
         -- https://luals.github.io/wiki/configuration/#neovim
         settings = {
             Lua = {
@@ -48,19 +45,15 @@ local lsp_servers = {
                 },
             },
         },
-    }),
-    lang.server("tailwindcss"),
-    lang.server("ts_ls", {
+    },
+    tailwindcss = {},
+    ts_ls = {
         -- Prevent conflict with denols
         root_markers = { "package.json" },
         single_file_support = false,
-    }),
-    lang.server("yamlls"),
+    },
+    yamlls = {},
 }
-
-local server_names = function(servers)
-    return arr.map(servers, function(s) return s.name end)
-end
 
 return {
     -- https://github.com/mason-org/mason.nvim
@@ -112,17 +105,17 @@ return {
         config = function()
             -- Configure all LSP servers using vim.lsp.config (Neovim 0.11+)
             -- blink.cmp adds its completion capabilities automatically
-            for _, s in ipairs(lsp_servers) do
-                vim.lsp.config(s.name, s.setup)
+            for name, config in pairs(servers) do
+                vim.lsp.config(name, config)
             end
 
             -- Enable all configured servers
-            vim.lsp.enable(server_names(lsp_servers))
+            vim.lsp.enable(vim.tbl_keys(servers))
 
             -- Mason for auto-installation
             require("mason-lspconfig").setup({
                 -- kotlin_lsp comes from mise until Mason's package downloads again (mason-registry#17323)
-                ensure_installed = vim.tbl_filter(function(name) return name ~= "kotlin_lsp" end, server_names(lsp_servers)),
+                ensure_installed = vim.tbl_filter(function(name) return name ~= "kotlin_lsp" end, vim.tbl_keys(servers)),
                 automatic_enable = false, -- servers are enabled explicitly with vim.lsp.enable above
             })
 
