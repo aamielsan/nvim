@@ -22,29 +22,19 @@ opt.relativenumber = true -- show relative line numbers
 
 -- indents
 opt.smartindent = true
-opt.autoindent = true
-
 opt.shiftround = true -- round-off indents to align
--- opt.foldmethod = "indent"
 
--- backups
 opt.swapfile = false
-opt.backup = false
 
 -- undo history
 opt.undofile = true
-
--- search
-opt.hlsearch = true
-opt.incsearch = true
 
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 
 opt.updatetime = 250
 
--- auto-reload files when changed externally
-opt.autoread = true
+-- reload files changed outside Neovim (autoread is on by default) when coming back to it
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   pattern = "*",
   command = "checktime",
