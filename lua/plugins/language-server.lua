@@ -38,11 +38,7 @@ local servers = {
         },
     },
     tailwindcss = {},
-    ts_ls = {
-        -- Prevent conflict with denols
-        root_markers = { "package.json" },
-        single_file_support = false,
-    },
+    ts_ls = {}, -- lspconfig's root detection already skips Deno projects
     yamlls = {},
 }
 
