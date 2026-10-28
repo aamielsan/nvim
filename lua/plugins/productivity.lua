@@ -1,7 +1,7 @@
 -- One shared terminal: each key moves it to that position, or hides it if it's already there.
 -- `exit` in the shell closes it for good; the next key starts a new one.
 local terminal_positions = {
-    float = { position = "float", border = "rounded", width = 0.55, height = 0.75 },
+    float = { position = "float", border = "rounded", width = 0.9, height = 0.9 }, -- set both: a moved terminal keeps any size not set here
     bottom = { position = "bottom", border = "none", height = 15 }, -- splits only use one size
     right = { position = "right", border = "none", width = 0.4 },
 }
