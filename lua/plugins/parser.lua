@@ -50,6 +50,7 @@ return {
                 "javascript",
                 "json",
                 "kotlin",
+                "python",
                 "tsx",
                 "typescript",
                 "yaml",
