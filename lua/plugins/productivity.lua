@@ -57,4 +57,52 @@ return {
             { "<leader>tv", function() terminal("right") end, desc = "Terminal Vertical" },
         },
     },
+    -- :Reader shows the buffer like an e-reader: Markdown rendered in a centred page. j/k move by screen line
+    -- (a paragraph is one long line), or by numbered line with a count. m cycles the margins, # toggles line
+    -- numbers, :q leaves. render-markdown only loads, and only renders, for :Reader.
+    -- https://github.com/MeanderingProgrammer/render-markdown.nvim
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        lazy = true,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {
+            enabled = false, -- only the buffers :Reader turns it on for
+            anti_conceal = { enabled = false }, -- keep the cursor line rendered too
+        },
+        init = function()
+            local margins = { { "Narrow", 100 }, { "Normal", 80 }, { "Wide", 64 } } -- page width in columns
+            vim.api.nvim_create_user_command("Reader", function()
+                require("render-markdown").buf_enable()
+                local page = require("snacks").zen({
+                    toggles = { dim = false },
+                    win = {
+                        minimal = true,
+                        -- margins in the page's colour that hide the text behind (the default dims to black)
+                        backdrop = { transparent = false, bg = require("snacks").util.color("Normal", "bg") },
+                        wo = { wrap = true, linebreak = true, breakindent = true, smoothscroll = true },
+                    },
+                })
+                local function apply() -- the choices live in all-caps globals, which ShaDa keeps across sessions
+                    local numbers = vim.g.READER_NUMBERS == 1
+                    page.opts.width = margins[vim.g.READER_MARGINS or 2][2]
+                    page:update()
+                    vim.wo[page.win].number, vim.wo[page.win].relativenumber = numbers, numbers -- like the editor
+                end
+                apply()
+                local function map(lhs, rhs, expr) vim.keymap.set("n", lhs, rhs, { buffer = true, expr = expr }) end
+                map("j", "v:count == 0 ? 'gj' : 'j'", true)
+                map("k", "v:count == 0 ? 'gk' : 'k'", true)
+                map("m", function()
+                    vim.g.READER_MARGINS = (vim.g.READER_MARGINS or 2) % #margins + 1
+                    apply()
+                    vim.notify("Margins: " .. margins[vim.g.READER_MARGINS][1])
+                end)
+                map("#", function()
+                    vim.g.READER_NUMBERS = vim.g.READER_NUMBERS == 1 and 0 or 1
+                    apply()
+                    vim.notify("Line numbers: " .. (vim.g.READER_NUMBERS == 1 and "on" or "off"))
+                end)
+            end, { desc = "Read the buffer in a centred column" })
+        end,
+    },
 }

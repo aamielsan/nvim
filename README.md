@@ -14,6 +14,7 @@ Contains Neovim configuration using Lua as the configuration language.
 ## Useful commands
 1. `:Lazy`: opens the window for the plugin manager (`lazy.nvim`). Update plugins with `:Lazy update`; there is no automatic update check.
 2. `:Mason`: opens the window for the package manager for LSP servers, DAP servers, linters, and formatters (`mason.nvim`).
+3. `:Reader`: reads the buffer like an e-reader, with the Markdown rendered in a centred page; `m` changes the margins and `#` toggles line numbers. The dotfiles' `feed` opens articles with it.
 
 ## Folder structure
 
